@@ -6,6 +6,7 @@
     <h1>{{ apiStore.api.data?.name }}</h1>
     <div v-if="apiStore.api.isFetching">Loading...</div>
     <img :src="apiStore.api.data?.image" alt="" />
+    {{ apiStore.protected }}
   </div>
 </template>
 
