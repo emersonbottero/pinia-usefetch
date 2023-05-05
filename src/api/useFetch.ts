@@ -62,20 +62,20 @@ export function mockedFetch<T>(
           ctx.data = mock.default
         }
         return ctx
-      },
-      async beforeFetch({ options, cancel }) {
-        const myToken = localStorage.getItem('auth')
-        if (!myToken) cancel()
-
-        options.headers = {
-          ...options.headers,
-          Authorization: `Bearer ${myToken}`
-        }
-
-        return {
-          options
-        }
       }
+      // async beforeFetch({ options, cancel }) {
+      //   const myToken = localStorage.getItem('auth')
+      //   if (!myToken) cancel()
+
+      //   options.headers = {
+      //     ...options.headers,
+      //     Authorization: `Bearer ${myToken}`
+      //   }
+
+      //   return {
+      //     options
+      //   }
+      // }
     }
   })
   return ApiFetch(url, { ...options }, { ...useFetchOptions })
