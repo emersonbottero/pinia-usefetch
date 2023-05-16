@@ -1,10 +1,10 @@
 <template>
   <table>
     <thead>
+      <TableFilter :data="data" v-model="filters" />
       <tr>
         <th v-for="(type, name) in columns" :key="name" :type="type">{{ name }}</th>
       </tr>
-      <TableFilter :data="data" v-model="filters" />
     </thead>
     <tbody>
       <tr v-for="(item, index) in filteredData" :key="index">
@@ -42,27 +42,38 @@ const filteredData = computed(() => {
     let isMatch = true
     for (const key in filters.value) {
       if (filters.value[key] !== undefined && filters.value[key] !== '') {
-        const filterType = filterData[key].type
+        if (filterData[key]) {
+          const { label, type: filterType } = filterData[key]
+          const operationKey = `${filterData[key].label}Operation`
+          const operation = filters.value[operationKey]
 
-        if (
-          filterType === 'text' &&
-          !(item[key] as string).toLowerCase().includes(filters.value[key].toLowerCase())
-        ) {
-          isMatch = false
-          break
-        } else if (filterType === 'number' && item[key] !== filters.value[key]) {
-          isMatch = false
-          break
-        } else if (filterType === 'boolean' && item[key] !== filters.value[key]) {
-          isMatch = false
-          break
-        } else if (
-          filterType === 'date' &&
-          new Date(item[key] as string).toISOString().slice(0, 10) !==
-            new Date(filters.value[key]).toISOString().slice(0, 10)
-        ) {
-          isMatch = false
-          break
+          if (filterType === 'text') {
+            if (
+              (operation == 'a*b' &&
+                !(item[key] as string).toLowerCase().includes(filters.value[key].toLowerCase())) ||
+              (operation == 'ab*' &&
+                !(item[key] as string)
+                  .toLowerCase()
+                  .startsWith(filters.value[key].toLowerCase())) ||
+              (operation == '*ab' &&
+                !(item[key] as string).toLowerCase().endsWith(filters.value[key].toLowerCase()))
+            )
+              isMatch = false
+            break
+          } else if (filterType === 'number' && item[key] !== filters.value[key]) {
+            isMatch = false
+            break
+          } else if (filterType === 'boolean' && item[key] !== filters.value[key]) {
+            isMatch = false
+            break
+          } else if (
+            filterType === 'date' &&
+            new Date(item[key] as string).toISOString().slice(0, 10) !==
+              new Date(filters.value[key]).toISOString().slice(0, 10)
+          ) {
+            isMatch = false
+            break
+          }
         }
       }
     }

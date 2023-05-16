@@ -5,16 +5,22 @@
         ><SmartCheckbox v-model="filters[name]" />
         <span @click="() => delete filters[name]">🗑️ </span>
       </span>
-      <span v-else style="display: flex">
-        <input :type="parseInputType(type)" v-model="filters[name]" />
-        <!-- <select style="width: 5px" name="" id="" v-model="filters[`${name}Operation`]">
+      <span v-else class="filters">
+        <select name="" id="" v-model="filters[`${name}Operation`]">
           <option v-for="option in typeFilters(type)" v-bind="option" :key="option.value"></option>
         </select>
-        <button>{{ filters[`${name}Operation`] }}</button> -->
+        <input :type="parseInputType(type)" v-model="filters[name]" />
       </span>
     </th>
   </tr>
 </template>
+
+<style scoped>
+.filters {
+  display: flex;
+  flex-direction: column;
+}
+</style>
 
 <script setup lang="ts">
 import { getColumnsFromTableData, type DataType } from '@/api/dataFilter'
