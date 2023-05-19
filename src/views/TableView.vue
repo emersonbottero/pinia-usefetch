@@ -1,6 +1,7 @@
 <template>
   <div>
-    <SmartTable :data="data"></SmartTable>
+    <!-- <SmartTable :data="data"></SmartTable> -->
+    <VTable />
   </div>
 </template>
 
@@ -14,6 +15,7 @@ th {
 
 <script setup lang="ts">
 import SmartTable from '@/components/SmartTable.vue'
+import VTable from '@/views/VTable.vue'
 
 const data = [
   { name: 'Alice', age: 25, married: false, birthdate: new Date('1998-02-03') },
