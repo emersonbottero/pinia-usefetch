@@ -15,6 +15,7 @@
         <th>Name</th>
         <th>Age</th>
         <th>Country</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -28,6 +29,7 @@
               <td>{{ row.name }}</td>
               <td>{{ row.age }}</td>
               <td>{{ row.country }}</td>
+              <td @click="() => editingRowHandler(row)">✏️</td>
             </tr>
           </template>
         </template>
@@ -37,9 +39,29 @@
       </tr>
     </tbody>
   </table>
+  <SModal v-if="showEdit" @closeModal="showEdit = false">
+    <div class="edit-row">
+      <div v-for="(value, key, index) in editingRow" :key="index">
+        <label :for="index">{{ key }}</label>
+        <input :id="index" type="text" :value="value" />
+      </div>
+    </div>
+  </SModal>
 </template>
 
 <style scoped>
+.edit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.edit-row > div {
+  flex-direction: column;
+  justify-self: stretch;
+  display: flex;
+  align-items: flex-start;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -64,6 +86,8 @@ select {
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
+import SModal from '../components/SModal.vue'
+
 const selectedGroup = ref<keyof People | 'none'>('none')
 
 interface People {
@@ -125,5 +149,15 @@ const updateGroupedData = () => {
 
 const toggleGroup = (index: any) => {
   groupedData.value[index].expanded = !groupedData.value[index].expanded
+}
+
+const showEdit = ref(false)
+
+const editingRow = ref()
+
+const editingRowHandler = (row: People) => {
+  editingRow.value = row
+  showEdit.value = true
+  console.log('editing...', row)
 }
 </script>
