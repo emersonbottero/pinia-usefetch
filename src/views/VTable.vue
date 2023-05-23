@@ -29,6 +29,7 @@
               <td>{{ row.name }}</td>
               <td>{{ row.age }}</td>
               <td>{{ row.country }}</td>
+              <td>{{ row.birth }}</td>
               <td @click="() => editingRowHandler(row)">✏️</td>
             </tr>
           </template>
@@ -43,9 +44,14 @@
     <div class="edit-row">
       <div v-for="(value, key, index) in editingRow" :key="index">
         <label :for="index">{{ key }}</label>
-        <input :id="index" type="text" :value="value" />
+        <input
+          :id="index"
+          :type="typeof value == 'string' ? 'text' : value instanceof Date ? 'date' : 'number'"
+          v-model="editingRow[key]"
+        />
       </div>
     </div>
+    <button @click="handleUpdate">Update</button>
   </SModal>
 </template>
 
@@ -94,14 +100,15 @@ interface People {
   name: string
   age: number
   country: string
+  birth: Date
 }
 
 const data = [
-  { name: 'John Doe', age: 25, country: 'USA' },
-  { name: 'Jane Smith', age: 30, country: 'Canada' },
-  { name: 'Mike Johnson', age: 28, country: 'USA' },
-  { name: 'Emma Watson', age: 27, country: 'UK' },
-  { name: 'David Lee', age: 32, country: 'USA' }
+  { name: 'John Doe', age: 25, country: 'USA', birth: new Date() },
+  { name: 'Jane Smith', age: 30, country: 'Canada', birth: new Date() },
+  { name: 'Mike Johnson', age: 28, country: 'USA', birth: new Date() },
+  { name: 'Emma Watson', age: 27, country: 'UK', birth: new Date() },
+  { name: 'David Lee', age: 32, country: 'USA', birth: new Date() }
 ] as People[]
 
 const groupedData = ref<
@@ -159,5 +166,9 @@ const editingRowHandler = (row: People) => {
   editingRow.value = row
   showEdit.value = true
   console.log('editing...', row)
+}
+
+const handleUpdate = () => {
+  console.log(editingRow.value)
 }
 </script>
